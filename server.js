@@ -10,18 +10,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve frontend
-app.use(express.static(path.join(process.cwd(), 'public')));
+// Serve static files from public/
+app.use(express.static(path.join(process.cwd(), "public")));
 
+// Root route serves index.html
+app.get("/", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "public", "index.html"));
+});
+
+// OpenAI client
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+// Chat API
 app.post("/api/chat", async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, model } = req.body;
     const completion = await client.chat.completions.create({
-      model: "gpt-4.1-mini",
+      model: model || "gpt-4.1-mini",
       messages: [{ role: "user", content: message }],
     });
     res.json({ reply: completion.choices[0].message.content });
