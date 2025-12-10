@@ -189,11 +189,12 @@ async function sendMessage(){
   const payload = { message: text, model: modelSelect.value };
 
   try{
-    const res = await fetch('http://localhost:3000/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
+const res = await fetch('https://mini-gpt-production.up.railway.app/api/chat', {
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body: JSON.stringify(payload)
+});
+
 
     const data = await res.json();
     loadingBubble.textContent = data.reply || 'No reply';
