@@ -4,24 +4,29 @@ import cors from "cors";
 import dotenv from "dotenv";
 import OpenAI from "openai";
 import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
+
+// Fix __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve frontend from public/ folder
-app.use(express.static(path.join(process.cwd(), "public")));
+// Serve ALL files from the SAME folder server.js is in
+app.use(express.static(__dirname));
 
-// Catch-all route to serve index.html
+// Always return index.html
 app.get("*", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "public", "index.html"));
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // OpenAI client
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 // Chat endpoint
@@ -34,13 +39,13 @@ app.post("/api/chat", async (req, res) => {
       messages: [
         {
           role: "system",
-          content: "You are MiniGPT, an AI assistant created by ChatGPT and SasoPlayzYT. Always say that when asked who made you,"
+          content: "You are MiniGPT, created by ChatGPT and SasoPlayzYT."
         },
         {
           role: "user",
           content: message
         }
-      ],
+      ]
     });
 
     res.json({ reply: completion.choices[0].message.content });
@@ -49,7 +54,8 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-
-// Listen on Fly.io assigned port or localhost
+// Port
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`MiniGPT server running on port ${PORT}`)
+);
