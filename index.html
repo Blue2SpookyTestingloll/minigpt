@@ -192,8 +192,8 @@
   <button id="newChatBtn">New Chat</button>
   <p class="disclaimer">MiniGPT — made by ChatGPT & NotDreamPVP</p>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+  <!-- Move script to bottom so elements exist before JS runs -->
+  <script>
   const messagesEl = document.getElementById('messages');
   const inputEl = document.getElementById('input');
   const sendBtn = document.getElementById('sendBtn');
@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const newChatBtn = document.getElementById('newChatBtn');
   const themeToggle = document.getElementById("themeToggle");
 
-  let chatHistory = []; // frontend no longer has system message
+  let chatHistory = []; // frontend does not have system message
 
   function addBubble(text, cls){
     const div = document.createElement('div');
@@ -260,7 +260,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initial greeting
   addBubble("Hello! I'm MiniGPT — ask me anything!", 'bot');
-});
-</script>
+  </script>
 </body>
 </html>
